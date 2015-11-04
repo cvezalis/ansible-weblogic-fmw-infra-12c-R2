@@ -1,0 +1,23 @@
+################################################################################
+# ==> tasks for fmw-managed-server Role. Creates a managed server in an existing
+# ==> Fussion Middleware 12c R2 domain on a weblogic server. Supports 12.2.1
+# ==> author: Christos Vezalis
+# ##############################################################################
+
+# ==> Create managed server on Domain
+- name: Copy create managed server script
+  template: src=create-managed.py dest={{ mw_installer_folder }}
+- name: Execute create managed server script
+  shell: '{{ weblogic_home }}/common/bin/wlst.sh {{ mw_installer_folder }}/create-managed.py'
+    
+# ==> Start managed server
+- name: Create security folder for managed server
+  file: state=directory path={{ domains_home }}/{{ domain_name }}/servers/{{ managed_server_name }}/security
+- name: Create boot properties file for managed server
+  template: src=boot.properties dest={{ domain_home }}/servers/{{ managed_server_name }}/security/
+- name: Copy Start Managed Server Script
+  template: src=start-managed-server.py dest={{ mw_installer_folder }}
+- name: Start Managed Server
+  shell: "{{ weblogic_home }}/common/bin/wlst.sh {{ mw_installer_folder }}/start-managed-server.py"
+- name: Wait for Managed Server to startup 
+  wait_for: host={{ server_hostname }} port={{ managed_server_port }} delay=2 timeout=30

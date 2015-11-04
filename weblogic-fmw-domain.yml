@@ -1,0 +1,28 @@
+---
+- name: Configure Oracle Linux 7.1 with WebLogic 12c R2 domain
+  hosts: weblogic
+  sudo: True
+  vars_files:
+    # User defined variables for infrastructure
+    - infra-vars.yml
+    # Common properties. You may not delete this
+    - wls-vars.yml
+    # Infrastructure passwords
+    - secrets.yml
+  roles:
+    - role: linux-wls
+    - role: linux-jdk
+    - role: fmw-software
+      sudo_user: '{{ oracle_user }}'
+    - role: fmw-domain
+      sudo_user: '{{ oracle_user }}'
+    - role: node-manager
+    - role: start-admin-server
+      sudo_user: '{{ oracle_user }}'
+    - role: fmw-managed-server
+      sudo_user: '{{ oracle_user }}'
+  pre_tasks:
+    # ==> Fix hosts file. Remove hostname from local loop. A workaround for
+    # remove hostname to local loop
+    - name: fix host file 127.0.0.1 entry
+      lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1' line='127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4' owner=root group=root mode=0644

@@ -1,0 +1,23 @@
+# ==> Ansible Role for start Admin Server for the first time in a configured
+# ==> WebLogic 12c R2 Domain
+- name: Create security folder on Admin Server
+  file: state=directory path={{ domains_home }}/{{ domain_name }}/servers/{{ admin_server_name }}/security owner={{ oracle_user }} group={{ oracle_group }}
+  tags:
+    - start-admin-server
+- name: Create boot.properties file
+  template: src=boot.properties dest={{ domains_home }}/{{ domain_name }}/servers/{{ admin_server_name }}/security/ owner={{ oracle_user }} group={{ oracle_group }}
+  tags:
+    - start-admin-server
+- name: Copy Admin Server start-up script
+  template: src=start-admin-server.py dest={{ mw_installer_folder }} owner={{ oracle_user }} group={{ oracle_group }} mode=0755
+  tags:
+    - start-admin-server
+- name: Execute start Admin Server script
+  shell: "{{ weblogic_home }}/common/bin/wlst.sh {{ mw_installer_folder }}/start-admin-server.py"
+  sudo_user: '{{ oracle_user }}'
+  tags:
+     - start-admin-server
+- name: Wait for Admin Server to startup
+  wait_for: port={{ admin_server_port }} delay=2 timeout=60
+  tags:
+    - start-admin-server

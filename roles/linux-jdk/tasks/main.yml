@@ -1,0 +1,22 @@
+################################################################################
+# ==> tasks for linux-jdk Role that installs JDK in an Oracle Linux 7 system
+# ==> author: Christos Vezalis
+################################################################################
+
+# ==> Install JDK
+- name: Copy jdk archive to host
+  copy: src={{ jdk_installation_archive }} dest=~/{{ jdk_installation_archive }}
+  args:
+    force: no
+- name: Extract JDK archive
+  command: 'tar -xf ~/{{ jdk_installation_archive }} -C {{ oracle_base }}'
+  args:
+    creates: "{{ jdk_folder }}"
+- name: Change ownership of jdk folder
+  file: path="{{ jdk_folder }}" owner={{ oracle_user }} group={{ oracle_group }} recurse=yes
+- name: Change entropy device for java
+  command: "sed -i.bak 's/\\/dev\\/random/\\/dev\\/.\\/urandom/' {{ jdk_folder }}/jre/lib/security/java.security"
+- name: Add JAVA_HOME environment variariables in bashrc
+  lineinfile: dest='/home/{{ oracle_user }}/.bashrc' line='export JAVA_HOME={{ jdk_folder }}'
+- name: Add Java bin folder to path in bashrc
+  lineinfile: dest='/home/{{ oracle_user }}/.bashrc' line='export PATH=$PATH:$JAVA_HOME/bin'

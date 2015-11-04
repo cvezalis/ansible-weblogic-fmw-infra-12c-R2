@@ -1,0 +1,38 @@
+################################################################################
+# ==> Main Tasks for fmw-domain Role
+# ==> Creates a Domain with Fussion Middleware 12c R2 Infrastructure software
+# ==> Compatible with 12.2.1
+# ==> author: Christos Vezalis
+################################################################################
+
+# ==> Create Repository in Database
+- name: password response file for repository creation
+  template: src=passwords.txt dest={{ mw_installer_folder }} owner={{ oracle_user }} group={{ oracle_group }}
+  tags:
+    - repo
+- name: copy create repository script
+  template: src=create_repo.sh dest={{ mw_installer_folder }} owner={{ oracle_user }} group={{ oracle_group }} mode=0755
+  tags:
+    - repo
+- name: execute create repository script
+  shell: "{{ mw_installer_folder }}/create_repo.sh"
+  tags:
+    - repo
+    
+# ==> Create new domain
+- name: copy create domain python script
+  template: src=create-domain.py dest={{ mw_installer_folder }} owner={{ oracle_user }} group={{ oracle_group }}
+  tags:
+    - create-domain
+- name: Execute create domain script
+  shell: "{{ weblogic_home }}/common/bin/wlst.sh {{ mw_installer_folder }}/create-domain.py"
+  tags:
+    - create-domain
+
+# ==> Create Environment Variables for Oracle user
+#- name: Creates new .bashrc file with system variables
+#  template: src=.bashrc dest=/home/oracle/.bashrc
+- name: Add Oracle Home environment variables
+  lineinfile: dest='/home/{{ oracle_user }}/.bashrc' line='export ORACLE_HOME={{ middleware_home }}'
+  tags:
+    - oracle-vars

@@ -1,0 +1,13 @@
+# Common paths and names
+middleware_home: '{{ oracle_base }}/product/Oracle_Home'
+middleware_common_home: '{{ middleware_home }}/oracle_common'
+domains_home: '{{ oracle_base }}/config/Domains'
+applications_home: '{{ oracle_base }}/config/applications'
+mw_installer_folder: '{{ oracle_base }}/installer'
+domain_home: '{{ domains_home }}/{{ domain_name }}'
+nodemanager_home: '{{ domain_home }}/nodemanager'
+weblogic_home: '{{ middleware_home }}/wlserver'
+nodemanager_username: 'weblogic'
+weblogic_admin: 'weblogic'
+admin_server_name: 'AdminServer'
+server_hostname: '{{ ansible_fqdn }}'
