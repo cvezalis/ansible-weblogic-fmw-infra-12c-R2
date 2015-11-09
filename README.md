@@ -5,6 +5,8 @@ Vagrant configuration included. You can download it and test it with vagrant run
 
 $ vagrant up
 
+You can connect to Enterprise Manager using http://192.168.56.14:7001/em using weblogic/welcome1.
+
 Playbook includes the following roles:
 - linux-wls
 - linux-jdk
@@ -35,3 +37,6 @@ This starts the Admin server using nodemanager for the first time. Creates some 
 fmw-manager-server:
 This role creates and starts a managed server with JRF template. (Ready to host ADF or other Fusion Middleware applications)
 
+More information here:
+
+http://unversioned.blogspot.gr/2015/11/using-ansible-to-install-weblogic-12c.html
