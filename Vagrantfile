@@ -14,8 +14,8 @@ Vagrant.configure(2) do |config|
   # boxes at https://atlas.hashicorp.com/search.
   
   # Choose Oracle Linux 7.1 or CentOS 7.1
-  #config.vm.box = "boxcutter/centos71"
-  config.vm.box = "boxcutter/oel71"
+  config.vm.box = "boxcutter/centos71"
+  #config.vm.box = "boxcutter/oel71"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
