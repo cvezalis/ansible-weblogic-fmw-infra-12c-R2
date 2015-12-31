@@ -14,7 +14,7 @@ mw_installer: 'fmw_12.2.1.0.0_infrastructure.jar'
 # database settings for repository
 dbserver_name: '192.168.56.13'
 dbserver_port: '1521'
-dbserver_service: 'orcl.oradb3.private'
+dbserver_service: 'db.oradb3.private'
 repository_prefix: 'wls12c2'
 
 # Domain Name
